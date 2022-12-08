@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnswersMap } from "../types";
 
 const SpeechRecognitionCompat =
   window?.SpeechRecognition || webkitSpeechRecognition;
@@ -8,8 +9,14 @@ const SpeechGrammarListCompat =
 const recognition = new SpeechRecognitionCompat();
 const speechRecognitionList = new SpeechGrammarListCompat();
 
-const phrases = ["yes", "no", "don't know", "probably", "probably not"];
-const grammar = `#JSGF V1.0; grammar colors; public <color> = ${phrases.join(
+const phrases = [
+  AnswersMap.Yes,
+  AnswersMap.No,
+  AnswersMap.DontKnow,
+  AnswersMap.Probably,
+  AnswersMap.ProbablyNot,
+];
+const grammar = `#JSGF V1.0; grammar answers; public <answer> = ${phrases.join(
   " | "
 )};`;
 
@@ -49,7 +56,10 @@ export const useVoiceRecognition = ({
     return () => {
       recognition.removeEventListener("error", errorHandler as EventListener);
       recognition.removeEventListener("result", onRecognized as EventListener);
-      recognition.removeEventListener('speechend', onSpeechEnd as EventListener);
+      recognition.removeEventListener(
+        "speechend",
+        onSpeechEnd as EventListener
+      );
     };
   }, [onError, onRecognized]);
 
