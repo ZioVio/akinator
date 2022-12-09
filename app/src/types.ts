@@ -5,3 +5,9 @@ export const AnswersMap = {
     Probably: "probably",
     ProbablyNot: "probably not",
 }
+
+
+export type AnimationAction = {
+    duration: number,
+    delay: number,
+}
