@@ -21,7 +21,6 @@ const initialAnswers: Answer[] = Object.values(AnswersMap).map((ans) => ({
 
 export const useAnswerRecognition = (): AnswerRecognitionReturnValue => {
   const [answers, setAnswers] = useState<Answer[]>(initialAnswers);
-  console.log('answers:', answers);
 
   const onRecognized = useCallback(
     (ev: SpeechRecognitionEvent) => {
