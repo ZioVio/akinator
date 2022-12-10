@@ -12,12 +12,10 @@ type RenderContainerProps = {
 export const RenderContainer: React.FC<RenderContainerProps> = ({action}) => {
 
     useEffect(()=>{
-        canvasRenderer.action(action.duration, action.delay)
+        canvasRenderer.action(action.duration, action.delay);
     }, [action])
 
-    const memoContainer = useMemo(()=>{
+    return useMemo(() => {
         return <div id={"canva"} className={styles.canva} ref={node => canvasRenderer.init(node)}></div>
     }, [])
-
-    return memoContainer;
 };

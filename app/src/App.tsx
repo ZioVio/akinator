@@ -9,6 +9,7 @@ import { Game } from "./pages/Game";
 import {RenderContainer} from "./components/RenderContainer/RenderContainer";
 import {Simulate} from "react-dom/test-utils";
 import animationEnd = Simulate.animationEnd;
+import {I_DIDNT_GUESS, I_TOLD_YOU, SIMPLE_TALK} from "./actions";
 
 const router = createBrowserRouter([
   {
@@ -44,7 +45,9 @@ function App() {
       {/*<RouterProvider router={router} />*/}
       {/* <Recognition />
       <Synthesis /> */}
-      <button onClick={()=>{dispatch({type: "ANIMATE", payload: {delay: 0, duration: 5}})}}>qwe</button>
+      <button onClick={()=>{dispatch(SIMPLE_TALK())}}>SIMPLE_TALK</button>
+      <button onClick={()=>{dispatch(I_DIDNT_GUESS())}}>I_DIDNT_GUESS</button>
+      <button onClick={()=>{dispatch(I_TOLD_YOU())}}>I_TOLD_YOU</button>
       <RenderContainer action={state.animation}/>
     </div>
   );

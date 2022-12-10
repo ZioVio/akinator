@@ -24,6 +24,7 @@ class App {
         this.bgTexture = new THREE.TextureLoader();
         this.mixer = null;
         this.mainAction = null;
+        this.actionTimeout = null;
         this.light = new THREE.AmbientLight( 0xffffff , 2.5);
     }
 
@@ -79,9 +80,11 @@ class App {
 
     action(duration = 5, delay = 0) {
         if(!this.mainAction) return;
-        this.mainAction.time = delay * 1000;
+        clearTimeout(this.actionTimeout);
+        this.mainAction.time = delay;
+        this.mainAction.play();
         this.mainAction.paused = false;
-        setTimeout(()=>{
+        this.actionTimeout = setTimeout(()=>{
             this.mainAction.paused = true;
         }, duration * 1000)
     }
