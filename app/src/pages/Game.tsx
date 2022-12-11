@@ -1,4 +1,4 @@
-import {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import { useAnswerRecognition } from "../hooks/useAnswerRecognition";
 import { speak } from "../utils";
 import { answer, Guess, start, win } from "../utils/api";
@@ -116,15 +116,26 @@ export const Game: React.FC = () => {
               <RenderContainer action={state.animation}/>
             </div>
             <div className={"col container-fluid"}>
-              {/*{isLoading && <p>Loading...</p>}*/}
-              {/*{isRecognizing && <p>Recognizing...</p>}*/}
               {guess ? (
-                  <div>
-                    <h4>I think it is {guess.name}</h4>
-                    <p>{guess.description}</p>
-                    <img src={guess.absolute_picture_path} alt={guess.description} />
-                    <button onClick={onYesPress}>Yes</button>
-                    <button onClick={onNoPress}>No</button>
+                  <div className="card w-100 mb-5">
+                    <img src={guess.absolute_picture_path} alt={guess.description} className="card-img-top mx-auto p-5" />
+                    <div className="card-body">
+                      <h5 className="card-title fs-1">I think it is {guess.name}</h5>
+                      <p className="card-text fs-4">
+                        {guess.description}
+                      </p>
+                      <Link to="/finish">
+                        <button className={"btn w-25 btn-info text-uppercase mx-1"} onClick={()=>{
+                          dispatch({type: "SET_GUESS", payload: {
+                            picture: guess.absolute_picture_path,
+                            description: guess.description,
+                            name: guess.name
+                          }})
+                          onYesPress();
+                        }}>Yes</button>
+                      </Link>
+                      <button className={"btn w-25 btn-warning text-uppercase mx-1"} onClick={onNoPress}>No</button>
+                    </div>
                   </div>
               ) : (
                   <>
@@ -158,3 +169,12 @@ export const Game: React.FC = () => {
       </>
   );
 };
+
+
+// <div>
+//   <h4>I think it is {guess.name}</h4>
+//   <p>{guess.description}</p>
+//   <img src={guess.absolute_picture_path} alt={guess.description} />
+//   <button onClick={onYesPress}>Yes</button>
+//   <button onClick={onNoPress}>No</button>
+// </div>

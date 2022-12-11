@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import { Synthesis, Recognition } from "./components";
 import { Welcome } from "./pages/Welcome";
 import { Game } from "./pages/Game";
+import {Finish} from "./pages/Finish";
 // import {RenderContainer} from "./components/RenderContainer/RenderContainer";
 // import {Simulate} from "react-dom/test-utils";
 // import animationEnd = Simulate.animationEnd;
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     path: "/game",
     element: <Game />,
   },
+  {
+    path: "/finish",
+    element: <Finish />,
+  },
 ]);
 
 const initialAnimation = {
@@ -29,8 +34,17 @@ const initialAnimation = {
   }
 };
 
+type GuessData = {
+  picture?: string,
+  description?: string,
+  name?: string
+}
+
 export type ReducerContextType = {
-  state: typeof initialAnimation,
+  state: {
+   animation: typeof initialAnimation.animation,
+   guess?: GuessData
+  },
   dispatch:(action: any) => void
 }
 
@@ -39,12 +53,14 @@ const reducer = (state: any, action: any) => {
     case "ANIMATE":
       console.log(JSON.stringify(action.payload))
       return {...state, animation: action.payload};
+    case "SET_GUESS":
+      return {...state, guess: action.payload}
     default:
       return state;
   }
 };
 
-export const reducerContext = createContext<ReducerContextType>({state: initialAnimation, dispatch: ()=>{console.log("huy")}})
+export const reducerContext = createContext<ReducerContextType>({state: {animation: initialAnimation.animation}, dispatch: ()=>{console.log("huy")}})
 
 const ReducerContextProvider = (props: { children: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; }) =>{
   const [state, dispatch] = useReducer(reducer, initialAnimation);

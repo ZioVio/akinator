@@ -6,7 +6,7 @@ const kamilaTextBadge: React.CSSProperties = {
     position: 'absolute',
     width: '12rem',
     padding: '0.5rem',
-    right: '6.5rem',
+    right: 'calc(50% - 13.5rem)',
     top: '4rem',
     backgroundColor: 'wheat',
     borderRadius: "15px 15px 15px 0px"
