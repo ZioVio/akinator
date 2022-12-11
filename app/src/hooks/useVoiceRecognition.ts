@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AnswersMap } from "../types";
 
 const SpeechRecognitionCompat =
@@ -63,15 +63,15 @@ export const useVoiceRecognition = ({
     };
   }, [onError, onRecognized]);
 
-  const startRecognizing = () => {
+  const startRecognizing = useCallback(() => {
     recognition.start();
     setIsRecognizing(true);
-  };
+  }, []);
 
-  const stopRecognizing = () => {
+  const stopRecognizing = useCallback(() => {
     recognition.stop();
     setIsRecognizing(false);
-  };
+  }, []);
 
   return {
     isRecognizing,

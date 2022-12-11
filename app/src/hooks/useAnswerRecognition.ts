@@ -1,11 +1,6 @@
 import { useCallback, useState } from "react";
-import { AnswersMap } from "../types";
+import { Answer, AnswersMap } from "../types";
 import { useVoiceRecognition } from "./useVoiceRecognition";
-
-type Answer = {
-  text: string;
-  selected: boolean;
-};
 
 type AnswerRecognitionReturnValue = {
   isRecognizing: boolean;
