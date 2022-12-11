@@ -1,11 +1,6 @@
 import { useCallback, useState } from "react";
-import { AnswersMap } from "../types";
+import { Answer, AnswersMap } from "../types";
 import { useVoiceRecognition } from "./useVoiceRecognition";
-
-type Answer = {
-  text: string;
-  selected: boolean;
-};
 
 type AnswerRecognitionReturnValue = {
   isRecognizing: boolean;
@@ -21,7 +16,6 @@ const initialAnswers: Answer[] = Object.values(AnswersMap).map((ans) => ({
 
 export const useAnswerRecognition = (): AnswerRecognitionReturnValue => {
   const [answers, setAnswers] = useState<Answer[]>(initialAnswers);
-  console.log('answers:', answers);
 
   const onRecognized = useCallback(
     (ev: SpeechRecognitionEvent) => {

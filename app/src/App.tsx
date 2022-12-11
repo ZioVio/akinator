@@ -42,13 +42,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialTodos);
   return (
     <div className="App">
-      {/*<RouterProvider router={router} />*/}
-      {/* <Recognition />
-      <Synthesis /> */}
-      <button onClick={()=>{dispatch(SIMPLE_TALK())}}>SIMPLE_TALK</button>
-      <button onClick={()=>{dispatch(I_DIDNT_GUESS())}}>I_DIDNT_GUESS</button>
-      <button onClick={()=>{dispatch(I_TOLD_YOU())}}>I_TOLD_YOU</button>
-      <RenderContainer action={state.animation}/>
+      <RouterProvider router={router} />
     </div>
   );
 }
