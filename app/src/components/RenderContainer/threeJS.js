@@ -9,7 +9,7 @@ const background = new URL('./assets/background.jpg', import.meta.url);
 class App {
 
     constructor() {
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer( { alpha: true } );
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(
             45,
@@ -29,16 +29,10 @@ class App {
     }
 
     init(node) {
+        if(!node) return;
         this.renderer.setSize(node.clientWidth, node.clientHeight);
-
+        this.renderer.setClearColor( 0x000000, 0 );
         node.appendChild(this.renderer.domElement);
-
-        this.renderer.setClearColor(0xA3A3A3);
-
-        this.bgTexture.load(background.href , (texture) => {
-                this.scene.background = texture;
-            }
-        );
 
         this.camera.position.set(0, 4, 10);
         this.camera.aspect = node.clientWidth/node.clientHeight;
@@ -47,6 +41,7 @@ class App {
         this.orbit.maxPolarAngle = Math.PI/3;
         this.orbit.enableZoom = false;
         this.orbit.update();
+        this.scene.background = null;
         this.scene.add(this.light);
         this.assetLoader.load(kamila.href, this.onLoad.bind(this), undefined, function(error) {
             console.error(error);
@@ -64,6 +59,7 @@ class App {
         const clip = THREE.AnimationClip.findByName(clips, 'Animation');
         this.mainAction = this.mixer.clipAction(clip);
         this.mainAction.play();
+        this.mainAction.timeScale = 2;
         this.mainAction.paused = true;
     }
 

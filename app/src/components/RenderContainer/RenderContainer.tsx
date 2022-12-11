@@ -10,7 +10,7 @@ type RenderContainerProps = {
 }
 
 export const RenderContainer: React.FC<RenderContainerProps> = ({action}) => {
-
+    console.log('RenderContainer');
     useEffect(()=>{
         canvasRenderer.action(action.duration, action.delay);
     }, [action])

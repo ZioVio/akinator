@@ -1,11 +1,16 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import { useAnswerRecognition } from "../hooks/useAnswerRecognition";
 import { speak } from "../utils";
 import { answer, Guess, start, win } from "../utils/api";
 import { getAnsweredIndex } from "../utils/getAnsweredIndex";
 import { shouldTryToGuess } from "../utils/shouldTryToGuess";
+import {RenderContainer} from "../components/RenderContainer";
+import {reducerContext, useReducerContext} from "../App";
+import {Link} from "react-router-dom";
+import {I_DIDNT_GUESS, I_TOLD_YOU, SIMPLE_TALK} from "../actions";
 
 export const Game: React.FC = () => {
+  const {state, dispatch} = useReducerContext();
   const { startRecognizing, isRecognizing, answers, resetAnswers } =
     useAnswerRecognition();
 
@@ -29,6 +34,7 @@ export const Game: React.FC = () => {
       setQuestion(q);
       if (!shouldTryToGuess(questionCountRef.current)) {
         speak(q);
+        dispatch(SIMPLE_TALK());
         setTimeout(() => {
           startRecognizing();
         }, 2000);
@@ -44,6 +50,7 @@ export const Game: React.FC = () => {
   const onNoPress = useCallback(() => {
     setGuess(null);
     speak(question);
+    dispatch(SIMPLE_TALK());
   }, [question]);
 
   useEffect(() => {
@@ -60,6 +67,10 @@ export const Game: React.FC = () => {
         const answerIndex = getAnsweredIndex(answers);
         if (answerIndex === -1) {
           return;
+        } else if(answerIndex !== 0) {
+          dispatch(I_DIDNT_GUESS())
+        } else if(answerIndex === 0) {
+          dispatch(I_TOLD_YOU())
         }
         resetAnswers();
         answer(answerIndex).then((res) => {
@@ -73,6 +84,7 @@ export const Game: React.FC = () => {
   useEffect(() => {
     if (shouldTryToWin) {
       speak("I will try to quess the character now");
+      dispatch(SIMPLE_TALK());
       setIsLoading(true);
       win()
         .then((res) => {
@@ -97,27 +109,52 @@ export const Game: React.FC = () => {
   }, [startRecognizing]);
 
   return (
-    <>
-      {isLoading && <p>Loading...</p>}
-      {isRecognizing && <p>Recognizing...</p>}
-      {guess ? (
-        <div>
-          <h4>I think it is {guess.name}</h4>
-          <p>{guess.description}</p>
-          <img src={guess.absolute_picture_path} alt={guess.description} />
-          <button onClick={onYesPress}>Yes</button>
-          <button onClick={onNoPress}>No</button>
+      <>
+        <div className={"container p-5"}>
+          <div className={"row"}>
+            <div className={"col container-fluid"}>
+              <RenderContainer action={state.animation}/>
+            </div>
+            <div className={"col container-fluid"}>
+              {/*{isLoading && <p>Loading...</p>}*/}
+              {/*{isRecognizing && <p>Recognizing...</p>}*/}
+              {guess ? (
+                  <div>
+                    <h4>I think it is {guess.name}</h4>
+                    <p>{guess.description}</p>
+                    <img src={guess.absolute_picture_path} alt={guess.description} />
+                    <button onClick={onYesPress}>Yes</button>
+                    <button onClick={onNoPress}>No</button>
+                  </div>
+              ) : (
+                  <>
+                    <div className="card mb-5" >
+                      <div className="card-body">
+                        <h5 className="card-title">Question</h5>
+                        <p className={"text-warning"} style={{height: '1rem'}}>
+                          {isLoading && 'Loading...'}
+                          {isRecognizing && 'Recognizing...'}
+                        </p>
+                        <p className={'fs-6'} style={{height: '1rem'}}>{question}</p>
+                      </div>
+                    </div>
+                    <div className={"d-flex flex-column h-50 justify-content-around"}>
+                      {answers.map((answer) => (
+                          <p className={`btn ${answer.selected ? 'btn-light' : 'btn-primary'} text-uppercase`} key={answer.text}>
+                            {answer.text}
+                          </p>
+                      ))}
+                    </div>
+                  </>
+              )}
+            </div>
+          </div>
+          <div className={"row"}>
+            <Link className={"align-self-end"} to="/">
+              <button className={"btn w-25 btn-danger text-uppercase"}>EXIT</button>
+            </Link>
+          </div>
         </div>
-      ) : (
-        <>
-          <h3>{question}</h3>
-          {answers.map((answer) => (
-            <p key={answer.text}>
-              {answer.text} {answer.selected.toString()}
-            </p>
-          ))}
-        </>
-      )}
-    </>
+      </>
   );
 };
